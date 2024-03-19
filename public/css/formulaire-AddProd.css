@@ -1,0 +1,19 @@
+.card-admin-home
+{
+    background: rgba( 19, 16, 16, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 7px );
+    border-radius: 50px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+    height: 70vh;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 40px;
+    padding: 100px;
+    color: rgb(255, 254, 254);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}

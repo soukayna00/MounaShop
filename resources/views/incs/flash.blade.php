@@ -1,0 +1,60 @@
+
+@if($message=Session::get('success')  )
+
+<div class="alert alert-success alert-block">
+    <button type="button" class="close" data-dismiss="alert">X</button>
+    <strong>  {{$message}} </strong>
+</div>
+
+@endif
+
+
+
+@if($message=Session::get('successupdate'))
+
+<div class="alert alert-success alert-block">
+    <button type="button" class="close" data-dismiss="alert">X</button>
+    <strong> {{$message}}</strong>
+</div>
+
+
+@endif
+
+@if($message=Session::get('successdelete'))
+
+<div class="alert alert-success alert-block">
+    <button type="button" class="close" data-dismiss="alert">X</button>
+    <strong> {{$message}}</strong>
+</div>
+
+
+@endif
+@if($message=Session::get('successShippement'))
+
+<div class="alert alert-success alert-block">
+    <button type="button" class="close" data-dismiss="alert">X</button>
+    <strong> {{$message}}</strong>
+</div>
+
+
+@endif
+@if($message=Session::get('successPaiement'))
+
+<div class="alert alert-success alert-block">
+    <button type="button" class="close" data-dismiss="alert">X</button>
+    <strong> {{$message}}</strong>
+</div>
+
+
+@endif
+@if($message=Session::get('successAddCategory'))
+
+<div class="alert alert-success alert-block">
+    <button type="button" class="close" data-dismiss="alert">X</button>
+    <strong> {{$message}}</strong>
+</div>
+
+
+@endif
+
+

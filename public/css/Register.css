@@ -1,0 +1,20 @@
+.Register-container
+{
+    background-image: url(../img/register-img.jpg);
+    background-size: cover;
+    background-position: 50%;
+    height: 89vh;
+    background-repeat: no-repeat;
+
+}
+
+.Login-container
+{
+    background-image: url(../img/seconnecter-img.jpg);
+    background-size: cover;
+    background-position: 50%;
+    height: 89vh;
+    background-repeat: no-repeat;
+
+}
+
