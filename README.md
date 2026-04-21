@@ -51,23 +51,6 @@ A full-stack e-commerce web application built with **Laravel**, offering a compl
 
 ---
 
-## 📁 Project Structure
-
-```
-
-resources/views/
-│
-├── EspaceClient/        # Customer interface layout
-├── cart/               # Shopping cart page
-├── checkout/           # Livraison & payment pages
-├── categories/         # Category listing
-├── products/           # Product catalogue
-├── promotions/         # Promotions page
-└── confirmation/       # Order confirmation page
-
-````
-
----
 
 ## ⚙️ Installation
 
