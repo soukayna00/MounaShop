@@ -1,154 +1,234 @@
 <div>
-    <!-- Simplicity is the essence of happiness. - Cedric Bledsoe -->
-  @extends('EspaceClient');
-  @section('title','Livraison')
+    @extends('EspaceClient')
 
-  <style>
-    .mainContentCommande{
-        /* height: 90vh; */
-        padding: 30px;
-        padding-top:50px;
+    @section('title','Checkout')
 
+    <style>
+        /* ===== PAGE (MATCH YOUR BEIGE STYLE) ===== */
+        .checkout-page {
+            min-height: 100vh;
+            padding: 110px 20px 60px; /* FIXED TOP PADDING FOR NAVBAR */
+            background: #f5f0e6; /* your beige theme */
+            font-family: Arial, sans-serif;
+        }
 
+        /* ===== CONTAINER ===== */
+        .checkout-container {
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 25px;
+        }
 
-    }
-    .recapdeCommande,.Livraison,.Payement{
-        height: fit-content;
-        border: 1px solid orange;
-        width: fit-content;
-        padding: 30px;
-        border-radius: 20px;
+        /* ===== LEFT SIDE ===== */
+        .checkout-form {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
 
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2b2b2b;
+        }
 
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            display: block;
+            color: #444;
+        }
 
-    }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
 
+        input:focus {
+            border-color: #2b2b2b;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+        }
 
-    .infoLivraison,.infoPersonnel{
-        margin: 20px;
+        /* ===== RIGHT SIDE ===== */
+        .order-summary {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
 
-    }
-    p{
-        font-size: 20px;
-    }
-  </style>
-@section('content')
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #444;
+        }
 
-<div class="mainContentCommande">
-    <h4 class="display-4">Votre commande</h4>
+        .summary-total {
+            border-top: 1px solid #eee;
+            margin-top: 15px;
+            padding-top: 15px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #2b2b2b;
+        }
 
-    {{-- recap de commande--}}
-  <div class="recapdeCommande">
+        .muted {
+            font-size: 12px;
+            color: #777;
+        }
 
-        @foreach (session('cart') as $id => $details )
-        <td><img src="{{ asset('img/'.$details['image']) }}" width="100" height="100" class="img-responsive"/></td>
-        @endforeach
+        /* ===== BUTTONS (MATCH YOUR DARK BUTTON STYLE) ===== */
+        .btn-pay {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            background: #111;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s ease;
+            margin-top: 10px;
+        }
 
-        <h5 class='display-5'>Récapitulatif de la commande</h5>
-        @foreach (session('cart') as $id => $details )
-        <p> Quantité : {{ $details['quantity'] }}x - {{ $details['name'] }}</p>
-        @endforeach
-        <p>Prix Total {{session()->get('total')}}</p>
-        <p>TVA(10%) : {{$tva=session()->get('total')*0.1}} </p>
-        <p>Prix Total à payer : {{$prixTotal=session()->get('total')+$tva}} ;   </p>
-        <a href="{{ url('/panier') }}">Modifier</a>
-  </div>
-<h4 class="display-4">Livraison et Informations Personnelles</h4>
-  <div class="Livraison" style="display: flex">
-    <div class="infoLivraison">
-        @include('incs.flash')
+        .btn-pay:hover {
+            background: #ff3b3b;
+            transform: translateY(-2px);
+        }
 
-        <h3>Informations de Livraison</h3>
-        <form action="processForm" method="POST">
-            @csrf
-        <label for="shipping_address">Adresse de Livraison:</label><br>
-        <input type="text" id="shipping_address" name="shipping_address" ><br>
-        @error('shipping_address')
-        <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-       @enderror
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 
-        <label for="shipping_city">Ville de Livraison:</label><br>
-        <input type="text" id="shipping_city" name="shipping_city" ><br>
-        @error('shipping_city')
-        <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-       @enderror
-        <label for="shipping_postal_code">Code Postal de Livraison:</label><br>
-        <input type="text" id="shipping_postal_code" name="shipping_postal_code" ><br>
-        @error('shipping_postal_code')
-        <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-       @enderror
+    @section('content')
+
+    <div class="checkout-page">
+
+        <div class="checkout-container">
+
+            <!-- LEFT -->
+            <div class="checkout-form">
+
+                @include('incs.flash')
+
+                <div class="section-title">Livraison</div>
+
+                <form action="processForm" method="POST">
+                    @csrf
+
+                    <label>Adresse</label>
+                    <input type="text" name="shipping_address">
+
+                    <label>Ville</label>
+                    <input type="text" name="shipping_city">
+
+                    <label>Code postal</label>
+                    <input type="text" name="shipping_postal_code">
+
+                    <div class="section-title" style="margin-top:20px;">
+                        Informations personnelles
+                    </div>
+
+                    <label>Nom complet</label>
+                    <input type="text" name="name">
+
+                    <label>Email</label>
+                    <input type="email" name="email">
+
+                    <label>Téléphone</label>
+                    <input type="text" name="phone_number">
+
+                    <button class="btn-pay">Continuer</button>
+                </form>
+
+                <div class="section-title" style="margin-top:30px;">
+                    Paiement
+                </div>
+
+                <?php
+                    $total = session()->get('total');
+                    $tva = $total * 0.1;
+                    $prixTotal = $total + $tva;
+                ?>
+
+                <form action="/processPaiement" method="POST">
+                    @csrf
+
+                    <label>Numéro de carte</label>
+                    <input type="text" name="NumCarte">
+
+                    <label>Expiration</label>
+                    <input type="text" name="DateExp">
+
+                    <label>CVV</label>
+                    <input type="password" name="password">
+
+                    <input type="hidden" name="prixTotal" value="{{ $prixTotal }}">
+
+                    <button class="btn-pay">
+                        Payer {{ $prixTotal }} DH
+                    </button>
+                </form>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="order-summary">
+
+                <div class="section-title">Résumé de commande</div>
+
+                @foreach (session('cart') as $id => $details)
+
+                    <div class="product-item">
+                        <span>{{ $details['quantity'] }}x {{ $details['name'] }}</span>
+                        <span>{{ $details['price'] * $details['quantity'] }} DH</span>
+                    </div>
+
+                @endforeach
+
+                <div class="summary-total">
+                    Total: {{ session()->get('total') }} DH
+                </div>
+
+                <div class="muted">
+                    TVA incluse (10%)
+                </div>
+
+                <form method="POST" action="/validerCommande">
+                    @csrf
+
+                    @foreach (session('cart') as $id => $details)
+                        <input type="hidden" name="cart[{{ $id }}][name]" value="{{ $details['name'] }}">
+                        <input type="hidden" name="cart[{{ $id }}][quantity]" value="{{ $details['quantity'] }}">
+                        <input type="hidden" name="cart[{{ $id }}][price]" value="{{ $details['price'] }}">
+                    @endforeach
+
+                    <button class="btn-pay" style="margin-top:15px;">
+                        Confirmer commande
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="infoPersonnel">
-            <h3>Informations Personnelles</h3>
-            {{-- @include('incs.flash') --}}
-            <label for="full_name">Nom Complet:</label><br>
-            <input type="text" id="full_name" name="name" ><br>
-       @error('name')
-            <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-         @enderror
-            <label for="email">Adresse Email:</label><br>
-            <input type="email" id="email" name="email" ><br>
-            @error('email')
-            <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-         @enderror
-            <label for="phone_number">Numéro de Téléphone:</label><br>
-            <input type="text"  name="phone_number"><br>
-            @error('phone_number')
-            <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-         @enderror
-            <button class="btn btn-dark mt-2" type="submit">valider</button>
-            </form>
-    </div>
-  </div>
-  <h4 class="display-4">Paiement</h4>
-<div class="Payement">
-    <h3>Informations de Paiement</h3>
-<form action="/processPaiement" method="POST" >
-    @include('incs.flash')
-    @csrf
-        <div>
-            <p class="text mb-1">Numero de la carte</p>
-            <input  type="text" name="NumCarte" placeholder="1234 5678 435678">
-            @error('NumCarte')
-            <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-         @enderror
-        </div>
-        <div>
-           <p class="text ">Date d'Expiration</p>
-            <input  type="text" name="DateExp" placeholder="MM/YYYY">
-            @error('DateExp')
-            <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-         @enderror
-        </div>
-       <div>
-           <p class="text ">CVV/CVC</p>
-            <input  type="password" name="password" placeholder="***">
-            @error('password')
-            <div class="alert alert-danger alert-block"> <button type="button" class="close" data-dismiss="alert">X</button> {{ $message }} </div>
-         @enderror
-         <input type="hidden" name="prixTotal" value="{{ $prixTotal }}">
-        </div>
-    <button class="btn btn-dark mt-2" type="submit">entrer le Paiement</button>
-</form>
 
- {{--   pour table commandes_details --}}
-<form method="POST" action="/validerCommande">
-    @csrf
-
-
-    @foreach (session('cart') as $id => $details)
-           <input type="hidden" name="cart[{{ $id }}][name]" value="{{ $details['name'] }}">
-           <input type="hidden" name="cart[{{ $id }}][quantity]" value="{{ $details['quantity'] }}">
-           <input type="hidden" name="cart[{{ $id }}][price]" value="{{ $details['price'] }}">
-
-    @endforeach
-    <button class='btn btn-danger mt-2' type="submit">Valider la commande</button>
-</form>
-
-
+    @endsection
 </div>
-</div>
-@endsection
-
-
-

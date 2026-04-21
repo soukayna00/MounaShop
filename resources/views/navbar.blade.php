@@ -1,102 +1,157 @@
-
-
 <style>
     #mainNavbar {
-        background: rgba(22, 22, 22, 0.21);
-        border-radius: 16px;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(7.1px);
-        -webkit-backdrop-filter: blur(7.1px);
-        border: 1px solid rgba(22, 22, 22, 0.02);
+        background: rgba(22, 22, 22, 0.25);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
 
-        text-align: center;
+        padding: 10px 20px;
+        max-width: 1100px;
+        margin: 10px auto; /* CENTER NAVBAR */
+    }
+
+    #mainNavbar .nav-link {
+        color: #fff;
+        font-weight: 500;
+        margin: 0 8px;
+        transition: 0.3s ease;
+        position: relative;
+    }
+
+    #mainNavbar .nav-link:hover {
+        color: #ff3b3b;
+        transform: translateY(-2px);
+    }
+
+    #mainNavbar .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        width: 0%;
+        height: 2px;
+        background: #ff3b3b;
+        transition: 0.3s ease;
+    }
+
+    #mainNavbar .nav-link:hover::after {
+        width: 100%;
+    }
+
+    #mainNavbar img {
+        transition: 0.3s ease;
+    }
+
+    #mainNavbar img:hover {
+        transform: scale(1.1);
+    }
+
+    .navbar-toggler {
+        border: none;
+    }
+
+    .nav-center {
         display: flex;
-        flex-direction: row;
-    }
-
-    #mainNavbar a {
-        color: white;
-    }
-    #mainNavbar a:hover{
-        color: rgb(234, 13, 13);
+        align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 </style>
 
-<div>
-    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar fixed-top">
-        <div class="container-fluid">
+<nav id="mainNavbar" class="navbar navbar-expand-lg fixed-top">
 
-            <img src="{{ asset('img/logo1.png') }}" width="70px" alt="">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+            <img src="{{ asset('img/logo1.png') }}" width="65px" alt="">
+        </a>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Centered content -->
+        <div class="collapse navbar-collapse nav-center" id="navbarSupportedContent">
+
+            <ul class="navbar-nav align-items-center">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Accueil</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/categories">Categories</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/panier">
+                        <img src="{{ asset('img/panier.png') }}" height="22px">
+                    </a>
+                </li>
+
+                @if(Auth::user())
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/categories">Categories</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/panier">
-                            <img src="{{ asset('img/panier.png') }}" height="25px" alt="">
+                        <a class="nav-link" href="/Profil">
+                            {{ session()->get('name') }}
                         </a>
                     </li>
 
-                 @if(Auth::user())
-                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="/Profil">{{session()->get('name')}}</a>
-                </li>
-
                     @if(Auth::user()->role === 'USER')
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="/Promotion">Promotion</a>
-                            </li>
-
-                                <form action="/logout" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-dark btn-outline-light" style="color: white">
-                                        <img src="{{ asset('img/logout.png') }}" height="20px" alt=""> Logout
-                                    </button>
-
-                                </form>
-
-                        @endif
-
-                        @if(Auth::user()->role === 'ADMIN')
                         <li class="nav-item">
-                            <a class="nav-link" href="/home">Espace Admin </a>
+                            <a class="nav-link" href="/Promotion">Promotion</a>
                         </li>
-                        <form action="/logout" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-dark btn-outline-light" style="color: white">
-                                <img src="{{ asset('img/logout.png') }}" height="20px" alt=""> Logout
-                            </button>
-                        </form>
-                         @endif
-
-
-                    @else
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">
-                                <img src="{{ asset('img/login.png') }}" height="20px" alt="">Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">
-                                <img src="{{ asset('img/register.png') }}" height="20px" alt="">Register
-                            </a>
+                            <form action="/logout" method="POST">
+                                @csrf
+                                <button class="btn btn-outline-light btn-sm">
+                                    <img src="{{ asset('img/logout.png') }}" height="18px">
+                                    Logout
+                                </button>
+                            </form>
                         </li>
                     @endif
 
-                </ul>
-            </div>
+                    @if(Auth::user()->role === 'ADMIN')
+                        <li class="nav-item">
+                            <a class="nav-link" href="/home">Espace Admin</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <form action="/logout" method="POST">
+                                @csrf
+                                <button class="btn btn-outline-light btn-sm">
+                                    <img src="{{ asset('img/logout.png') }}" height="18px">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    @endif
+
+                @else
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <img src="{{ asset('img/login.png') }}" height="18px"> Login
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">
+                            <img src="{{ asset('img/register.png') }}" height="18px"> Register
+                        </a>
+                    </li>
+
+                @endif
+
+            </ul>
         </div>
-    </nav>
-</div>
+
+    </div>
+</nav>

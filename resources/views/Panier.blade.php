@@ -1,106 +1,262 @@
 <div>
     @extends('EspaceClient')
+
     @section('title','Panier')
+
     @section('content')
 
     <style>
-     .panier{
-        height: fit-content;
-        padding: 33px;
-        padding-top:60px;
-        background-image: url({{ asset('img/background-categorie.jpg') }});
-     }
-     table{
-        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-        backdrop-filter: blur( 4px );
-        background-color: rgba(0, 0, 0, 0.223);
-        -webkit-backdrop-filter: blur( 4px );
-        color: white;
-        border-radius: 30px;
-     }
-     th{
-    padding: 20px;
-    text-align: center;
-    font-size: 20px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-    td{
-        text-align: center;
+        /* ===== PAGE BACKGROUND (MATCH YOUR STYLE) ===== */
+        .panier {
+            min-height: 100vh;
+            padding: 90px 20px;
+            background: #f5f0e6; /* beige like categories */
+        }
 
-        padding: 10px;
-        width: fit-content;
-        height: fit-content;
-    }
+        /* TITLE */
+        .panier h4 {
+            text-align: center;
+            font-weight: 800;
+            margin-bottom: 40px;
+            color: #2b2b2b;
+        }
+
+        /* ===== CART CARD WRAPPER ===== */
+        .cart-wrapper {
+            max-width: 1100px;
+            margin: auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #111;
+            color: white;
+        }
+
+        th {
+            padding: 18px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            text-align: center;
+            padding: 18px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        /* PRODUCT IMAGE */
+        td img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /* INPUT */
+        .quantity {
+            width: 70px;
+            text-align: center;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* BUTTONS */
+        .btn-modern {
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 13px;
+            transition: 0.3s ease;
+        }
+
+        .btn-modern:hover {
+            transform: scale(1.05);
+        }
+
+        /* TOTAL */
+        .cart-total {
+            padding: 20px;
+            text-align: right;
+            font-size: 18px;
+            font-weight: 700;
+            background: #fafafa;
+        }
+
+        .cart-total strong {
+            color: #111;
+        }
+
+        /* ACTION BUTTONS */
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1100px;
+            margin: 20px auto;
+        }
+
+        .cart-actions a {
+            text-decoration: none;
+        }
+
+        .btn-nav {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background: #111;
+            color: white;
+            transition: 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background: #ff3b3b;
+        }
+
+        /* EMPTY CART */
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
     </style>
 
-
     <div class="panier">
-    <h4 class="display-4">Votre Panier</h4>
-    <table  width='100%'>
-        <thead>
-        <tr>
-            <th scope="col">Nom de Produit</th>
-            <th scope="col">Photo</th>
-            <th scope="col">Prix</th>
-            <th scope="col">Quantité</th>
-            <th scope='col'>Total</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-       <tbody>
-                <?php $total=0 ?>
-             @if (session('cart'))
-             @foreach (session('cart') as $id => $details )
-             <?php $total+=$details['price'] * $details['quantity']  ; session()->put('total',$total) ?>
-             <tr>
-                <td>{{$details['name']}}</td>
-                <td><img src="{{ asset('img/'.$details['image']) }}" width="100" height="100" class="img-responsive"/></td>
-                <td>{{$details['price']}}</td>
-                <td data-th="Quantity">
-                    <input type="number" value="{{ $details['quantity'] }}" class="form-control quantity" />
-                </td>
-                <td>{{ $details['price'] * $details['quantity'] }}-DH</td>
-                <td class="actions" data-th="">
-                        <button class="btn btn-dark btn-sm update-cart" data-id="{{ $id }}">Modifier</button>
-                        <button class="btn btn-danger btn-sm remove-from-cart delete" data-id="{{ $id }}">Supprimer</button>
-                    </td>
-            </tr>
-             @endforeach
-             @endif
-    </tbody>
-    <tfoot>
 
-        <tr>
-            <td colspan="2" class="hidden-xs"></td>
-            <td style="color:rgb(18, 81, 18);font-size:20px " class="hidden-xs text-left"><strong>Total à payer : {{ $total }} DH</strong></td>
-        </tr>
-        </tfoot>
+        <h4 class="display-5">Votre Panier</h4>
 
-  </table>
-  <td><a href="{{ url('/') }}" class="btn btn-dark"><i class="fa fa-angle-left"></i> Retour</a></td>
-  <td><a href="{{ url('/livraison') }}" class="btn btn-dark"><i class="fa fa-angle-left"></i>suivant</a></td>
+        <div class="cart-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Photo</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                <?php $total = 0 ?>
+
+                @if(session('cart'))
+
+                    @foreach(session('cart') as $id => $details)
+
+                        <?php
+                            $total += $details['price'] * $details['quantity'];
+                            session()->put('total', $total);
+                        ?>
+
+                        <tr>
+
+                            <td>{{ $details['name'] }}</td>
+
+                            <td>
+                                <img src="{{ asset('img/'.$details['image']) }}">
+                            </td>
+
+                            <td>{{ $details['price'] }} DH</td>
+
+                            <td>
+                                <input type="number"
+                                       value="{{ $details['quantity'] }}"
+                                       class="form-control quantity">
+                            </td>
+
+                            <td>
+                                {{ $details['price'] * $details['quantity'] }} DH
+                            </td>
+
+                            <td>
+
+                                <button class="btn btn-dark btn-modern update-cart"
+                                        data-id="{{ $id }}">
+                                    Modifier
+                                </button>
+
+                                <button class="btn btn-danger btn-modern remove-from-cart"
+                                        data-id="{{ $id }}">
+                                    Supprimer
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    @endforeach
+
+                @else
+
+                    <tr>
+                        <td colspan="6" class="empty">
+                            Votre panier est vide
+                        </td>
+                    </tr>
+
+                @endif
+
+                </tbody>
+
+            </table>
+
+            <div class="cart-total">
+                Total à payer : <strong>{{ $total }} DH</strong>
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="cart-actions">
+
+            <a href="{{ url('/') }}">
+                <button class="btn-nav">← Retour</button>
+            </a>
+
+            <a href="{{ url('/livraison') }}">
+                <button class="btn-nav">Suivant →</button>
+            </a>
+
+        </div>
+
+    </div>
+
+    @endsection
 
 
-</div>
-  @endsection
-  @section('scripts')
-<script>
+    @section('scripts')
+    <script>
 
-
-
-// this function is for update card
         $(".update-cart").click(function (e) {
-           e.preventDefault();
+            e.preventDefault();
 
-           var ele = $(this);
+            var ele = $(this);
 
             $.ajax({
-               url: '{{ url('update-cart') }}',
-               method: "patch",
-               data: {_token: '{{ csrf_token() }}', id: ele.attr("data-id"), quantity: ele.parents("tr").find(".quantity").val()},
-               success: function (response) {
-                   window.location.reload();
-               }
+                url: '{{ url('update-cart') }}',
+                method: "PATCH",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: ele.attr("data-id"),
+                    quantity: ele.parents("tr").find(".quantity").val()
+                },
+                success: function () {
+                    location.reload();
+                }
             });
         });
 
@@ -109,21 +265,22 @@
 
             var ele = $(this);
 
-            if(confirm("vous etes sur de vouloire supprimer cet article de votrre panier ?")) {
+            if (confirm("Supprimer cet article ?")) {
                 $.ajax({
                     url: '{{ url('remove-from-cart') }}',
                     method: "DELETE",
-                    data: {_token: '{{ csrf_token() }}', id: ele.attr("data-id")},
-                    success: function (response) {
-                        window.location.reload();
-
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: ele.attr("data-id")
+                    },
+                    success: function () {
+                        location.reload();
                     }
                 });
             }
         });
 
     </script>
+    @endsection
 
-@endsection
-
-  </div>
+</div>
