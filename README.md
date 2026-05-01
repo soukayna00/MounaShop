@@ -1,10 +1,3 @@
-Here’s a clean and professional **README.md** for your ecommerce website (Laravel + cart + checkout + admin style system). I made it structured like a real GitHub project so it looks professional for recruiters or internships.
-
----
-
-## 📘 README.md
-
-```md
 # 🛒 E-Commerce Web Application (Laravel)
 
 A full-stack e-commerce web application built with **Laravel**, offering a complete shopping experience including product browsing, cart management, checkout, and order processing.
